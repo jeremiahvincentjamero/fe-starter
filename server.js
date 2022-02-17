@@ -4,7 +4,7 @@ const server = express();
 const PORT = process.env.PORT || 3000;
 
 console.log(process.env.PORT)
-server.use(express.static(path.join(__dirname,"public")));
+server.use(express.static("public"));
 
 server.use("/api/dashboard", function (req, res) {
   const dashboardData = JSON.parse(fs.readFileSync("data.json"));
