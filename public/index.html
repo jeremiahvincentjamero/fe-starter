@@ -1,60 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <link rel="icon" type="image/png" href="./images/favicon.png" />
+    <link rel="icon" type="image/png" href="src/images/favicon.png"/>
+    <div class="top-bg">
+        <title>Social Media Dashboard (with Dark Mode)</title>
+    </div>
 
-    <title>Social Media Dashboard (with Dark Mode)</title>
+    <link rel="stylesheet" href="dist/css/styles.css"/>
+    <script type="text/javascript" src="dist/js/scripts.js" defer></script>
+</head>
+<body>
+<main class="content">
+    <header>
+        <h1>Social Media Dashboard</h1>
+        <p class="total">Loading...</p>
+    </header>
+    <aside class="switchButton">
+        <label class="switch">
+            <label for="darkMode">Dark Mode</label>
+            <input type="checkbox" name="darkMode" id="darkMode" checked
+            onclick="switchModes()">
+            <span class="slider round"></span>
+        </label>
+    </aside>
 
-    <link rel="stylesheet" href="./dist/css/styles.css" />
-    <script type="text/javascript" src="./dist/js/scripts.js" defer></script>
-  </head>
-  <body>
-    <!-- HEADER -->
-    Social Media Dashboard Total Followers: 23,004
+    <section class="primary-cards">
 
-    <!-- TOGGLE -->
-    Dark Mode
+    </section>
 
-    <!-- FACEBOOK -->
-    @nathanf 1987 Followers 12 Today
+    <h2>Overview - Today</h2>
 
-    <!-- TWITTER -->
-    @nathanf 1044 Followers 99 Today
+    <section class="supporting-cards">
 
-    <!-- INSTAGRAM -->
-    @realnathanf 11k Followers 1099 Today
-
-    <!-- YOUTUBE -->
-    Nathan F. 8239 Subscribers 144 Today
-
-    <!-- OVERVIEW -->
-    Overview - Today
-
-    <!--  -->
-    Page Views 87 3%
-
-    <!--  -->
-    Likes 52 2%
-
-    <!--  -->
-    Likes 5462 2257%
-
-    <!--  -->
-    Profile Views 52k 1375%
-
-    <!--  -->
-    Retweets 117 303%
-
-    <!--  -->
-    Likes 507 553%
-
-    <!--  -->
-    Likes 107 19%
-
-    <!--  -->
-    Total Views 1407 12%
-  </body>
+    </section>
+</main>
+</body>
 </html>
+
+
+
+
+
+
+
