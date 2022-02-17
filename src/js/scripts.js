@@ -1,122 +1,53 @@
-(function () {
-    'use strict';
-    // 1. Fetch Data
-    fetch("/api/dashboard")//endpoint
-        .then((response) => response.json())
-        .then((data) => {
-            // 2. Render the Data
-            console.log(data)//promise
-            let numFormat = new Intl.NumberFormat('en-US')
-            let value = numFormat.format(parseInt(data.primary_metrics.total.value));
-            let label = data.primary_metrics.total.label;
-            document.getElementById("followers").innerHTML =
-                `Total ${label}: ${value} `;
-            for (let i = 0; i < data.primary_metrics.cards.length; i++) {
-                let service = data.primary_metrics.cards[i].service;
-                let username = data.primary_metrics.cards[i].username;
-                let value = data.primary_metrics.cards[i].value;
-                let label = (data.primary_metrics.cards[i].label).toUpperCase();
-                let metricValue = data.primary_metrics.cards[i].metric.value;
-                let metricTrend = data.primary_metrics.cards[i].metric.trend;
-                let serviceIcon = "";
-                let metricIcon = "";
-                let metricColor = "";
-                switch (service) {
-                    case "facebook":
-                        serviceIcon = "src/images/icon-facebook.svg";
-                        break;
-                    case "twitter":
-                        serviceIcon = "src/images/icon-twitter.svg";
-                        break;
-                    case "instagram":
-                        serviceIcon = "src/images/icon-instagram.svg";
-                        break;
-                    case "youtube":
-                        serviceIcon = "src/images/icon-youtube.svg";
-                        break;
-                }
-                if (metricTrend === "up") {
-                    metricIcon = "src/images/icon-up.svg";
-                    metricColor = "rate_green";
-                } else {
-                    metricIcon = "src/images/icon-down.svg";
-                    metricColor = "rate_red";
-                }
+async function init() {
+    const $content = document.querySelector('.content');
+    const $total = $content.querySelector('.total');
+    const $primaryCards = $content.querySelector('.primary-cards');
+    const $supportingCards = $content.querySelector('.supporting-cards');
 
-                document.getElementById(`${service}Service`).src =
-                    `${serviceIcon}`;
-                document.getElementById(`${service}Username`).innerHTML =
-                    `&nbsp@${username}`;
-                document.getElementById(`${service}Value`).innerHTML =
-                    `${value}`;
-                document.getElementById(`${service}Label`).innerHTML =
-                    `${label}`;
-                document.getElementById(`${service}MetricIcon`).src =
-                    `${metricIcon}`;
-                document.getElementById(`${service}MetricValue`).innerHTML =
-                    `${metricValue} Today`;
-                document.getElementById(`${service}MetricValue`).className =
-                    `${metricColor}`;
+    const response = await fetch('./data.json');
+    const data = await response.json();
 
+    const { primary_metrics, supporting_metrics: supportingCards } = data;
+    const { total, cards: primaryCards } = primary_metrics;
+    const numFormat = new Intl.NumberFormat('en-US');
 
-            }
-            for (let i = 0; i < data.supporting_metrics.length; i++) {
-                let service = data.supporting_metrics[i].service;
-                let value = data.supporting_metrics[i].value;
-                let label = data.supporting_metrics[i].label;
-                let metricPercent = data.supporting_metrics[i].metric.percent;
-                let metricTrend = data.supporting_metrics[i].metric.trend;
-                let serviceIcon = "";
-                let metricIcon = "";
-                let metricColor = "";
-                switch (service) {
-                    case "facebook":
-                        serviceIcon = "src/images/icon-facebook.svg";
-                        break;
-                    case "twitter":
-                        serviceIcon = "src/images/icon-twitter.svg";
-                        break;
-                    case "instagram":
-                        serviceIcon = "src/images/icon-instagram.svg";
-                        break;
-                    case "youtube":
-                        serviceIcon = "src/images/icon-youtube.svg";
-                        break;
-                }
-                if (metricTrend === "up") {
-                    metricIcon = "src/images/icon-up.svg";
-                    metricColor = "percentage_green";
-                } else {
-                    metricIcon = "src/images/icon-down.svg";
-                    metricColor = "percentage_red";
-                }
+    // 1. render the total header text
+    $total.textContent = `Total ${total.label}: ${numFormat.format(total.value)}`;
 
-                document.getElementById(`${service}Service${i}`).src =
-                    `${serviceIcon}`;
-                document.getElementById(`${service}Value${i}`).innerHTML =
-                    `${value}`;
-                document.getElementById(`${service}Label${i}`).innerHTML =
-                    `${label}`;
-                document.getElementById(`${service}MetricIcon${i}`).src =
-                    `${metricIcon}`;
-                document.getElementById(`${service}MetricPercent${i}`).innerHTML =
-                    `&nbsp${metricPercent}%`;
-                document.getElementById(`${service}MetricPercent${i}`).className =
-                    `${metricColor}`;
+    // 2. render the primary cards
+    primaryCards.forEach(card => {
+        $primaryCards.innerHTML += renderCard(card);
+    })
 
-
-            }
-
-
-        })
-    // .catch(error => console.log(error.message));
-
-
-})();
-
-function selectLabel(service) {
-
+    // 3. render the supporting cards
+    supportingCards.forEach(card => {
+        $supportingCards.innerHTML += renderCard(card);
+    })
 }
 
+function renderCard(card) {
+    const { service, username, value, label, metric } = card;
+    const { trend, percent, value: trendValue } = metric;
 
-//16
+    return `
+    <article class="card service-${service}">
+      <div class="card-user">
+        <img src="./images/icon-${service}.svg" alt="${service}">
+        ${username ? `<p>@${username}</p>` : ''}
+      </div>
+
+      <div class="card-main">
+        <p class="card-number">${value}</p>
+        <p class="card-label">${label}</p>
+      </div>
+
+      <div class="card-metric is-${trend}">
+        <img src="./images/icon-${trend}.svg" alt="${trend}">
+        <p>${percent ? `${percent}%` : `${trendValue} Today`}</p>
+        
+      </p>
+    </article>
+  `;
+}
+
+init();
